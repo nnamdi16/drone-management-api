@@ -1,5 +1,6 @@
 package com.nnamdi.gpi.drones.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nnamdi.gpi.drones.dto.DroneDto;
 import com.nnamdi.gpi.drones.dto.RegisterDroneDto;
@@ -21,5 +22,13 @@ public class EntityMapper {
 
     public DroneDto toDto(Drone entity) {
         return  mapper.convertValue(entity, DroneDto.class);
+    }
+
+    public String convertRegisterDtoToJson(RegisterDroneDto dto) throws JsonProcessingException {
+        return  mapper.writeValueAsString(dto);
+    }
+
+    public String convertDtoToJson(DroneDto dto) throws JsonProcessingException {
+        return  mapper.writeValueAsString(dto);
     }
 }
