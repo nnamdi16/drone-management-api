@@ -9,6 +9,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 @ApplicationScoped
 @Slf4j
 public class EntityMapper {
@@ -22,6 +24,12 @@ public class EntityMapper {
 
     public DroneDto toDto(Drone entity) {
         return  mapper.convertValue(entity, DroneDto.class);
+    }
+
+    public List<DroneDto> mapDroneListToDto(List<Drone> droneList) {
+        return droneList.stream()
+                .map(this::toDto)
+                .toList();
     }
 
     public String convertRegisterDtoToJson(RegisterDroneDto dto) throws JsonProcessingException {
