@@ -19,13 +19,13 @@ import java.util.Objects;
 @Entity
 @Table(name = "drones")
 public class Drone extends AbstractEntity implements Serializable {
-    @Column(name = "coordinateX")
+    @Column(name = "coordinatex")
     private int coordinateX;
 
     @Column(name = "name", unique = true)
     private String name;
 
-    @Column(name = "coordinateY")
+    @Column(name = "coordinatey")
     private int coordinateY;
 
     @Column(name = "direction")
