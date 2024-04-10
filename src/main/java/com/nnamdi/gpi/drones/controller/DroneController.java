@@ -7,11 +7,10 @@ import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+
+import java.util.List;
 
 @Path("/v1/drone")
 @ApplicationScoped
@@ -27,5 +26,11 @@ public class DroneController {
     @POST
     public Uni<DroneDto> registerDrone (@Valid RegisterDroneDto droneDto) {
         return  droneService.registerDrone(droneDto);
+    }
+
+    @GET
+    public Uni<List<DroneDto>> getDrones (@QueryParam("page") @DefaultValue("1") int page,
+                                          @QueryParam("size") @DefaultValue("50") int size) {
+        return  droneService.getDrones(page, size);
     }
 }
