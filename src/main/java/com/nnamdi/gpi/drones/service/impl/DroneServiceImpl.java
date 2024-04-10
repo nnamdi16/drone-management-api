@@ -7,14 +7,17 @@ import com.nnamdi.gpi.drones.exception.ModelAlreadyExistException;
 import com.nnamdi.gpi.drones.model.Drone;
 import com.nnamdi.gpi.drones.repository.DroneRepository;
 import com.nnamdi.gpi.drones.service.DroneService;
+import com.nnamdi.gpi.drones.util.AppUtil;
 import com.nnamdi.gpi.drones.util.EntityMapper;
 import io.quarkus.hibernate.reactive.panache.common.WithSession;
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
-import io.smallrye.mutiny.Multi;
+import io.quarkus.panache.common.Page;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.unchecked.Unchecked;
 import jakarta.enterprise.context.RequestScoped;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 @RequestScoped
 @Slf4j
@@ -73,7 +76,14 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Multi<DroneDto> getDrones(int page, int limit) {
-        return null;
+    @WithTransaction
+    @WithSession
+    public Uni<List<DroneDto>> getDrones(int page, int limit) {
+        AppUtil.validatePageRequest(page, limit);
+        Page pagination = Page.of(page - 1, limit);
+
+        return droneRepository.findAll().page(pagination).list()
+                .map(mapper::mapDroneListToDto);
     }
 }
+
