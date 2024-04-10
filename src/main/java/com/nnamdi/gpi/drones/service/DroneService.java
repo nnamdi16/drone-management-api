@@ -4,8 +4,9 @@ import com.nnamdi.gpi.drones.dto.DroneDto;
 import com.nnamdi.gpi.drones.dto.RegisterDroneDto;
 import com.nnamdi.gpi.drones.dto.UpdateDroneDto;
 import com.nnamdi.gpi.drones.model.Drone;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+
+import java.util.List;
 
 public interface DroneService {
     Uni<DroneDto> registerDrone(RegisterDroneDto drone);
@@ -13,7 +14,7 @@ public interface DroneService {
 
     Uni<Drone> getDronePosition(String id);
 
-    Multi<DroneDto> getDrones(int page, int limit);
+    Uni<List<DroneDto>> getDrones(int page, int limit);
 
 
 }
