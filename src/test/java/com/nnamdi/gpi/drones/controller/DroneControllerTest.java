@@ -3,7 +3,7 @@ package com.nnamdi.gpi.drones.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nnamdi.gpi.drones.dto.DroneDto;
-import com.nnamdi.gpi.drones.dto.RegisterDroneDto;
+import com.nnamdi.gpi.drones.request.RegisterDroneDto;
 import com.nnamdi.gpi.drones.mock.TestMock;
 import com.nnamdi.gpi.drones.service.DroneService;
 import com.nnamdi.gpi.drones.util.EntityMapper;
