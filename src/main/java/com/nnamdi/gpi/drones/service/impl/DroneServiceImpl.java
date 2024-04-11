@@ -1,7 +1,8 @@
 package com.nnamdi.gpi.drones.service.impl;
 
 import com.nnamdi.gpi.drones.dto.DroneDto;
-import com.nnamdi.gpi.drones.dto.RegisterDroneDto;
+import com.nnamdi.gpi.drones.dto.PaginatedResponse;
+import com.nnamdi.gpi.drones.request.RegisterDroneDto;
 import com.nnamdi.gpi.drones.dto.UpdateDroneDto;
 import com.nnamdi.gpi.drones.exception.ModelAlreadyExistException;
 import com.nnamdi.gpi.drones.model.Drone;
@@ -16,8 +17,6 @@ import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.unchecked.Unchecked;
 import jakarta.enterprise.context.RequestScoped;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
 
 @RequestScoped
 @Slf4j
@@ -78,12 +77,19 @@ public class DroneServiceImpl implements DroneService {
     @Override
     @WithTransaction
     @WithSession
-    public Uni<List<DroneDto>> getDrones(int page, int limit) {
+    public Uni<PaginatedResponse<DroneDto>> getDrones(int page, int limit) {
         AppUtil.validatePageRequest(page, limit);
         Page pagination = Page.of(page - 1, limit);
 
-        return droneRepository.findAll().page(pagination).list()
-                .map(mapper::mapDroneListToDto);
+        return droneRepository.count().flatMap(count -> {
+            int totalPages = (int) Math.ceil((double) count / limit);
+            boolean last = page-1 == totalPages - 1;
+            boolean first = page-1 == 0;
+
+            return droneRepository.findAll().page(pagination)
+                    .list()
+                    .map(drones -> new PaginatedResponse<>(mapper.mapDroneListToDto(drones), totalPages, count, last, first, drones.size(), limit, page));
+        });
     }
 }
 
