@@ -1,7 +1,7 @@
 package com.nnamdi.gpi.drones.mock;
 
 import com.nnamdi.gpi.drones.dto.DroneDto;
-import com.nnamdi.gpi.drones.dto.RegisterDroneDto;
+import com.nnamdi.gpi.drones.request.RegisterDroneDto;
 import com.nnamdi.gpi.drones.model.Drone;
 import com.nnamdi.gpi.drones.util.Direction;
 
