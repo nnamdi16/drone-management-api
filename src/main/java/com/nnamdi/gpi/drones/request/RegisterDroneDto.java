@@ -1,4 +1,4 @@
-package com.nnamdi.gpi.drones.dto;
+package com.nnamdi.gpi.drones.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nnamdi.gpi.drones.util.Direction;
