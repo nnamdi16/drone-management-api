@@ -3,7 +3,7 @@ package com.nnamdi.gpi.drones.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nnamdi.gpi.drones.dto.DroneDto;
-import com.nnamdi.gpi.drones.dto.RegisterDroneDto;
+import com.nnamdi.gpi.drones.request.RegisterDroneDto;
 import com.nnamdi.gpi.drones.model.Drone;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
