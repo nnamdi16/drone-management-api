@@ -36,7 +36,7 @@ public class DroneController {
 
     @GET
     public Uni<Response> getDrones (@QueryParam("page") @DefaultValue("1") int page,
-                                    @QueryParam("size") @DefaultValue("50") int size) {
-        return  droneService.getDrones(page, size).map(responseUtil::getSuccessResponse);
+                                    @QueryParam("limit") @DefaultValue("50") int limit) {
+        return  droneService.getDrones(page, limit).map(responseUtil::getSuccessResponse);
     }
 }
