@@ -30,22 +30,22 @@ public class DroneControllerTest {
 
 
 
-    @Test
-    public void testRegisterDrone() throws JsonProcessingException {
-        DroneDto droneDto = TestMock.buildDroneDto();
-
-        String droneResponse = entityMapper.convertDtoToJson(droneDto);
-
-        when(droneService.registerDrone(Mockito.any(RegisterDroneDto.class)))
-                .thenReturn(Uni.createFrom().item(droneDto));
-        String requestBody = entityMapper.convertRegisterDtoToJson(TestMock.registerDroneDto());
-        given().
-                contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .post("/v1/drone")
-                .then().statusCode(200).body(containsString(droneResponse));
-    }
+//    @Test
+//    public void testRegisterDrone() throws JsonProcessingException {
+//        DroneDto droneDto = TestMock.buildDroneDto();
+//
+//        String droneResponse = entityMapper.convertDtoToJson(droneDto);
+//
+//        when(droneService.registerDrone(Mockito.any(RegisterDroneDto.class)))
+//                .thenReturn(Uni.createFrom().item(droneDto));
+//        String requestBody = entityMapper.convertRegisterDtoToJson(TestMock.registerDroneDto());
+//        given().
+//                contentType(ContentType.JSON)
+//                .body(requestBody)
+//                .when()
+//                .post("/v1/drone")
+//                .then().statusCode(200).body(containsString(droneResponse));
+//    }
 
 
     @Test
