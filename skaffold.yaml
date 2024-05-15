@@ -1,0 +1,14 @@
+apiVersion: skaffold/v2beta16
+kind: Config
+build:
+  artifacts:
+    - image: drone-management-system
+      context: .
+      jib:
+        args:
+          - "-x"
+          - "test"
+deploy:
+  kubectl:
+    manifests:
+      - k8s/skaffold/*.yaml
