@@ -1,0 +1,11 @@
+apiVersion: linkerd.io/v1alpha2
+kind: ServiceProfile
+metadata:
+  name: drone-management-api.linkerd-app.svc.cluster.local
+  namespace: linkerd-app
+spec:
+  routes:
+    - name: GET /api/v1/drone
+      condition:
+        method: GET
+        pathRegex: /api/v1/drone
