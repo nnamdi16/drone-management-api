@@ -9,17 +9,22 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 You can run your application in dev mode that enables live coding using:
 
 ```shell script
-./mvnw compile quarkus:dev
+mvn clean install  -Dnet.bytebuddy.experimental=true
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+```shell script
+./mvnw compile quarkus:dev -Dnet.bytebuddy.experimental=true
+```
+
+> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/ and http://localhost:8080/q/swagger-ui to view the swagger UI.
+
 
 ## Packaging and running the application
 
 The application can be packaged using:
 
 ```shell script
-./mvnw package
+./mvnw package -Dnet.bytebuddy.experimental=true
 ```
 
 It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
