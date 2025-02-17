@@ -1,6 +1,7 @@
 package com.nnamdi.gpi.drones.util;
 
 import com.nnamdi.gpi.drones.exception.CustomException;
+import io.quarkus.logging.Log;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
@@ -23,7 +24,7 @@ public enum AppUtil {
     }
 
     public static void validatePageRequest(int page, int size) {
-        log.info("about to validate  page request ");
+        Log.info("about to validate  page request");
         if (page < 1 || size < 1) {
             throw new CustomException("page and size must be positive and not less than 1");
         }
