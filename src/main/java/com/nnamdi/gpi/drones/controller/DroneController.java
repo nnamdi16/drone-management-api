@@ -11,6 +11,9 @@ import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+import java.util.Objects;
 
 import static com.nnamdi.gpi.drones.controller.BaseApiController.BASE_API_PATH;
 import static com.nnamdi.gpi.drones.controller.BaseApiController.DRONE;
@@ -27,6 +30,9 @@ public class DroneController {
     @Inject
     ResponseUtil responseUtil;
 
+    @ConfigProperty(name = "greeting.message")
+    String message;
+
 
 
     @POST
@@ -38,5 +44,11 @@ public class DroneController {
     public Uni<Response> getDrones (@QueryParam("page") @DefaultValue("1") int page,
                                     @QueryParam("limit") @DefaultValue("50") int limit) {
         return  droneService.getDrones(page, limit).map(responseUtil::getSuccessResponse);
+    }
+
+    @GET()
+    @Path("/greeting")
+    public String sayHello() {
+         return "{\"message\": \"" + message + "\"}";
     }
 }
