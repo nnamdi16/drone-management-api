@@ -2,14 +2,13 @@ package com.nnamdi.gpi.drones.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import lombok.extern.slf4j.Slf4j;
 
 @Provider
-@Slf4j
 public class ExceptionHandler implements ExceptionMapper<Exception> {
 
     public static final String BAD_REQUEST_EXCEPTION = "BadRequestException";
@@ -19,7 +18,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(Exception exception) {
-        log.error("Failed to handle request", exception);
+        Log.error("Failed to handle request", exception);
 
 
         var code = switch (exception.getClass().getSimpleName()) {
