@@ -12,6 +12,7 @@ import com.nnamdi.gpi.drones.util.AppUtil;
 import com.nnamdi.gpi.drones.util.EntityMapper;
 import io.quarkus.hibernate.reactive.panache.common.WithSession;
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
+import io.quarkus.logging.Log;
 import io.quarkus.panache.common.Page;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.unchecked.Unchecked;
@@ -34,9 +35,9 @@ public class DroneServiceImpl implements DroneService {
     @WithTransaction
     @WithSession
     public Uni<DroneDto> registerDrone(RegisterDroneDto droneDto) {
-        log.info("about to register a drone {}", droneDto);
+        Log.infof("about to register a drone %s", droneDto);
        Drone drone = mapper.toEntity(droneDto);
-       log.info("Drone maker {}", drone);
+       Log.infof("Drone maker %s", drone);
         return checkIfDroneExists(drone)
                 .onItem().transformToUni(Unchecked.function(existingDrone -> {
                     if (existingDrone != null) {
