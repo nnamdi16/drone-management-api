@@ -2,19 +2,20 @@ package com.nnamdi.gpi.drones.model;
 
 import com.nnamdi.gpi.drones.util.AppUtil;
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+import io.quarkus.logging.Log;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.ZonedDateTime;
 
 
-@Slf4j
+
 @Getter
 @Setter
 @ToString
@@ -36,13 +37,13 @@ public class AbstractEntity extends PanacheEntityBase {
 
     @PrePersist
     public void abstractPrePersist() {
-        log.debug("about to run abstractPrePersist method");
+        Log.debug("about to run abstractPrePersist method");
         createdDate = ZonedDateTime.now();
         lastModifiedDate = ZonedDateTime.now();
         if (AppUtil.stringIsNullOrEmpty(id)) {
             id = AppUtil.generateUUIDString();
         }
-        log.debug("finished running abstractPrePersist method ");
+        Log.debug("finished running abstractPrePersist method ");
     }
 
     @PreUpdate
