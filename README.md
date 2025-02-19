@@ -9,11 +9,11 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 You can run your application in dev mode that enables live coding using:
 
 ```shell script
-mvn clean install  -Dnet.bytebuddy.experimental=true
+mvn clean install
 ```
 
 ```shell script
-./mvnw compile quarkus:dev -Dnet.bytebuddy.experimental=true
+./mvnw compile quarkus:dev 
 ```
 
 > **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/ and http://localhost:8080/q/swagger-ui to view the swagger UI.

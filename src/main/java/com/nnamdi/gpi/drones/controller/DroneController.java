@@ -30,7 +30,7 @@ public class DroneController {
     @Inject
     ResponseUtil responseUtil;
 
-    @ConfigProperty(name = "greeting.message")
+    @ConfigProperty(name = "JAVA_HOME")
     String message;
 
 
