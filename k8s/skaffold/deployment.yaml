@@ -1,37 +1,32 @@
-#apiVersion: v1
-#kind: ConfigMap
-#metadata:
-#  name: drone-mg
-#data:
-#  postgres_host: postgres
-#  postgres_port: "5432"
-#  postgres_database: test_db
-#  postgres_user: hello
-#---
-#apiVersion: v1
-#kind: Secret
-#metadata:
-#  name: drone-mg
-#stringData:
-#  postgres_password: topsecret
-#---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: drone-management-api-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
+  ingressClassName: nginx
   rules:
     - http:
         paths:
-          - pathType: Prefix
-            path: /drone-management-api(/|$)(.*)
+          - pathType: ImplementationSpecific
+            path: "/drone-management-api(/|$)(.*)"
             backend:
               service:
                 name: drone-management-api
                 port:
-                  number: 9000
+                  number: 8080
+          - pathType: ImplementationSpecific
+            path: "/q/dev-ui(/|$)(.*)"
+            backend:
+              service:
+                name: drone-management-api
+                port:
+                  number: 8080
+
+
+
 ---
 apiVersion: v1
 kind: Service
@@ -41,7 +36,7 @@ metadata:
     app: drone-management-api
 spec:
   ports:
-    - port: 9000
+    - port: 8080
       name: http
   type: ClusterIP
   selector:
@@ -63,74 +58,14 @@ spec:
       containers:
         - name: drone-management-api
           image: drone-management-api/drone-management-api:1.0-SNAPSHOT
-          imagePullPolicy: IfNotPresent
+          env:
+            - name: QUARKUS_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: QUARKUS_DATASOURCE_PASSWORD
+              value: "postgres"
+            - name: QUARKUS_DATASOURCE_REACTIVE_URL
+              value: "postgresql://postgres:5432/drone-management"
+          imagePullPolicy: Never
           ports:
-            - containerPort: 9000
+            - containerPort: 8080
 ---
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: postgres-deploy
-#  labels:
-#    name: postgres-deploy
-#    app: drone-management-system
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      name: postgres-pod
-#      app: drone-management-system
-#  template:
-#    metadata:
-#      name: postgres-pod
-#      labels:
-#        name: postgres-pod
-#        app: drone-management-system
-#    spec:
-#      containers:
-#        - name: postgres
-#          image: postgres
-#          ports:
-#            - containerPort: 5432
-#          env:
-#            - name: POSTGRES_USER
-#              valueFrom:
-#                configMapKeyRef:
-#                  name: drone-mg
-#                  key: postgres_user
-#            - name: POSTGRES_HOST
-#              valueFrom:
-#                configMapKeyRef:
-#                  name: drone-mg
-#                  key: postgres_host
-#            - name: POSTGRES_PORT
-#              valueFrom:
-#                configMapKeyRef:
-#                  name: drone-mg
-#                  key: postgres_port
-#            - name: POSTGRES_DATABASE
-#              valueFrom:
-#                configMapKeyRef:
-#                  name: drone-mg
-#                  key: postgres_database
-#            - name: POSTGRES_PASSWORD
-#              valueFrom:
-#                secretKeyRef:
-#                  name: drone-mg
-#                  key: postgres_password
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: db
-#  labels:
-#    name: postgres-service
-#    app: drone-management-system
-#spec:
-#  ports:
-#    - port: 5432
-#      targetPort: 5432
-#  selector:
-#    name: postgres-pod
-#    app: drone-management-system
-#
