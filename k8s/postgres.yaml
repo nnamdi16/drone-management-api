@@ -5,9 +5,9 @@ metadata:
   labels:
     app: postgres
 data:
-  POSTGRES_DB: test_db
-  POSTGRES_USER: hello
-  POSTGRES_PASSWORD: topsecret
+  POSTGRES_DB: "drone-management"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "postgres"
 ---
 apiVersion: v1
 kind: Service
