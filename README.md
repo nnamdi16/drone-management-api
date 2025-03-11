@@ -1,73 +1,117 @@
 # drone-management-api
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This project deploys the Drone Management API using Kubernetes and Quarkus.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+## Setup Kubernetes Cluster with Kind and Ingress
 
-## Running the application in dev mode
+### 1. Create a Kubernetes Cluster using Kind
 
-You can run your application in dev mode that enables live coding using:
-
-```shell script
-mvn clean install
+```shell
+kind create cluster
 ```
 
-```shell script
-./mvnw compile quarkus:dev 
+### 2. Load Docker Image into Kind
+
+Ensure your Docker image is built:
+
+```shell
+./mvnw package -Dquarkus.container-image.build=true
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/ and http://localhost:8080/q/swagger-ui to view the swagger UI.
+Then load the image into the Kind cluster:
 
+```shell
+kind load docker-image drone-management-api/drone-management-api:1.0-SNAPSHOT
+```
 
-## Packaging and running the application
+### 3. Apply Kubernetes Configurations
 
-The application can be packaged using:
+Apply the necessary Kubernetes configurations for deploying the application and PostgreSQL:
 
-```shell script
+```shell
+kubectl apply -f k8s/skaffold/deployment.yaml
+kubectl apply -f k8s/postgres.yaml
+```
+
+### 4. Set Up Ingress
+
+Install Ingress Controller:
+
+```shell
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+```
+
+### 5. Verify Ingress
+
+Verify that the Ingress is running:
+
+```shell
+kubectl get pods -n ingress-nginx
+kubectl get svc -n ingress-nginx
+```
+
+Port-forward the Ingress Controller:
+
+```shell
+kubectl port-forward --namespace ingress-nginx service/ingress-nginx-controller 8080:80
+```
+
+This will expose the Ingress at `http://localhost:8080`.
+
+---
+
+## Running the Application Locally in Dev Mode
+
+You can run the application in dev mode, which enables live coding, using:
+
+```shell
+./mvnw compile quarkus:dev
+```
+
+The application will be available at `http://localhost:8080`.
+
+---
+
+## Building and Packaging the Application
+
+To package the application as a JAR, run:
+
+```shell
 ./mvnw package -Dnet.bytebuddy.experimental=true
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+To create a Docker image, use:
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
+```shell
+./mvnw package -Dquarkus.container-image.build=true
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+---
 
-## Creating a native executable
+## Native Executable (Optional)
 
-You can create a native executable using:
+To create a native executable, run:
 
-```shell script
+```shell
 ./mvnw package -Dnative
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+Alternatively, if GraalVM is not installed, build the native image in a container:
 
-```shell script
+```shell
 ./mvnw package -Dnative -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./target/drone-management-api-1.0-SNAPSHOT-runner`
+The native executable can be found in `./target/drone-management-api-1.0-SNAPSHOT-runner`.
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
+---
 
-## Related Guides
+## Notes
 
-- Flyway ([guide](https://quarkus.io/guides/flyway)): Handle your database schema migrations
-- Reactive PostgreSQL client ([guide](https://quarkus.io/guides/reactive-sql-clients)): Connect to the PostgreSQL
-  database using the reactive pattern
+- This project uses Quarkus for building the Drone Management API.
+- The application can be packaged as either a JAR or a native executable for improved performance.
+- Ingress is used to expose the application when running in Kubernetes.
 
-## Provided Code
+--- 
 
-### RESTEasy Reactive
-
-Easily start your Reactive RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+For more information about Kubernetes, Quarkus, and related configurations, refer to their respective documentation.
