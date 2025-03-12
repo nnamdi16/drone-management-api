@@ -62,7 +62,10 @@ spec:
             - name: QUARKUS_DATASOURCE_USERNAME
               value: "postgres"
             - name: QUARKUS_DATASOURCE_PASSWORD
-              value: "postgres"
+              valueFrom:
+                secretKeyRef:
+                  key: quarkus.datasource.password
+                  name: drone-management-api-secrets
             - name: QUARKUS_DATASOURCE_REACTIVE_URL
               value: "postgresql://postgres:5432/drone-management"
           imagePullPolicy: Never
