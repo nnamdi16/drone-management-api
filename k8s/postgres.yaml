@@ -7,7 +7,6 @@ metadata:
 data:
   POSTGRES_DB: "drone-management"
   POSTGRES_USER: "postgres"
-  POSTGRES_PASSWORD: "postgres"
 ---
 apiVersion: v1
 kind: Service
@@ -41,6 +40,12 @@ spec:
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgres.password
+                  name: drone-management-api-secrets
           envFrom:
             - configMapRef:
                 name: postgres-config
