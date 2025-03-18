@@ -25,8 +25,6 @@ spec:
                 port:
                   number: 8080
 
-
-
 ---
 apiVersion: v1
 kind: Service
@@ -52,6 +50,18 @@ spec:
       app: drone-management-api
   template:
     metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-inject-secret-DB_USERNAME: "internal/data/database/config"
+        vault.hashicorp.com/agent-inject-secret-DB_PASSWORD: "internal/data/database/config"
+        vault.hashicorp.com/agent-inject-template-DB_USERNAME: |
+            {{- with secret "internal/data/database/config" -}}
+            {{ .Data.data.username }}
+            {{- end -}}
+        vault.hashicorp.com/agent-inject-template-DB_PASSWORD: |
+            {{- with secret "internal/data/database/config" -}}
+            {{ .Data.data.password }}
+            {{- end -}}
       labels:
         app: drone-management-api
     spec:
@@ -68,6 +78,10 @@ spec:
                   name: drone-management-api-secrets
             - name: QUARKUS_DATASOURCE_REACTIVE_URL
               value: "postgresql://postgres:5432/drone-management"
+            - name: POSTGRES_VAULT
+              value: "postgresql://$(DB_USERNAME):$(DB_PASSWORD)@postgres:5432/drone-management"
+            - name: JWT_PATH
+              value: '/var/run/secrets/kubernetes.io/serviceaccount/token'
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
