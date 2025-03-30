@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: drone-management-api-ingress
-  namespace: app
+  namespace: demo-new
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/use-regex: "true"
@@ -30,7 +30,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: app
+  namespace: demo-new
   name: drone-management-api
   labels:
     app: drone-management-api
@@ -45,9 +45,13 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: app
+  namespace: demo-new
   name: drone-management-api
 spec:
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: drone-management-api
@@ -66,14 +70,14 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: "username"
-                  name: "secretkv"
+                  name: "vso-db-demo"
             - name: QUARKUS_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   key: "password"
-                  name: "secretkv"
+                  name: "vso-db-demo"
             - name: QUARKUS_DATASOURCE_REACTIVE_URL
-              value: "postgresql://postgres:5432/drone-management"
+              value: "postgresql://postgres-postgresql.postgres.svc.cluster.local:5432/postgres"
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
